@@ -5,6 +5,7 @@
 {
   imports = [
     ./terminal.nix
+    ./niri.nix
   ];
 
   #User wird für nix konfiguriert

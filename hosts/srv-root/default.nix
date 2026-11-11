@@ -8,6 +8,7 @@
     ../../modules/network.nix
     ../../modules/gnome.nix   # Übergang: fliegt in Phase 6 raus
     ../../modules/vmware.nix
+    ../../modules/desktop.nix
   ];
 
   home-manager = {

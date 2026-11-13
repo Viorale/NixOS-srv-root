@@ -6,6 +6,8 @@
   imports = [
     ./terminal.nix
     ./niri.nix
+    ./cli.nix
+    ./yazi.nix
   ];
 
   #User wird für nix konfiguriert

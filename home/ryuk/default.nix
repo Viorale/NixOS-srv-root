@@ -8,6 +8,7 @@
     ./niri.nix
     ./cli.nix
     ./yazi.nix
+    ./nvim.nix
   ];
 
   #User wird für nix konfiguriert

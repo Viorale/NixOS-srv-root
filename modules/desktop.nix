@@ -12,4 +12,11 @@
   xdg.portal.config.niri."org.freedesktop.impl.portal.FileChooser" = [ "gtk" ];
 
   services.gnome.gnome-keyring.enable = true;
+
+  #Energie-Widgets.
+  programs.noctalia = {
+    enable = true;
+    recommendedServices.enable = true;
+  };
+
 }

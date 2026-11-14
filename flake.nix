@@ -18,9 +18,14 @@
 
   # Niri-flake = liefert ein fertig gebautes Programm (niri), das nicht aus deiner nixpkgs kommt, sondern vom Entwickler mit seiner gebaut wurde.
   niri.url = "github:epireyn/niri-flake";
-  };
+  
+  noctalia = {
+    url = "github:noctalia-dev/noctalia/v5.5.0";
+    inputs.nixpkgs.follows = "nixpkgs";
+    };
+  }; 
 
-  outputs = { self, nixpkgs, home-manager, niri, ... }@inputs: {
+  outputs = { self, nixpkgs, home-manager, niri, noctalia, ... }@inputs: {
     # "srv-root" ist der Name, den du später mit #srv-root ansprichst
     nixosConfigurations.srv-root = nixpkgs.lib.nixosSystem {
       specialArgs = { inherit inputs; };   # macht inputs in allen Modulen verfügbar
@@ -28,6 +33,7 @@
         ./hosts/srv-root
         home-manager.nixosModules.home-manager
         niri.nixosModules.niri
+        noctalia.nixosModules.default
       ];
     };
   };

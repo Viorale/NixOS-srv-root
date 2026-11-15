@@ -41,7 +41,7 @@
   # tippst du dein Passwort mit US-Tastatur (z und y vertauscht!).
   # Gleicher Befehl wie der Standard des regreet-Moduls, nur mit XKB_DEFAULT_LAYOUT davor.
   services.greetd.settings.default_session.command =
-    "${pkgs.dbus}/bin/dbus-run-session ${pkgs.coreutils}/bin/env XKB_DEFAULT_LAYOUT=de GSK_RENDERER=cairo WLR_NO_HARDWARE_CURSORS=1"
+    "${pkgs.dbus}/bin/dbus-run-session ${pkgs.coreutils}/bin/env XKB_DEFAULT_LAYOUT=de GSK_RENDERER=cairo WLR_NO_HARDWARE_CURSORS=1 "
     + "${lib.getExe pkgs.cage} ${lib.escapeShellArgs config.programs.regreet.cageArgs} -- "
     + "${lib.getExe config.programs.regreet.package}";
 

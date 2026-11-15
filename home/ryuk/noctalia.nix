@@ -16,7 +16,7 @@
         source = "builtin";
         builtin = "Catppuccin";
       };
-      shell.polkit_agent = false;   # wird in 4.3 auf true gesetzt
+      shell.polkit_agent = true;   # wird in 4.3 auf true gesetzt
     };
   };
 }

@@ -1,9 +1,6 @@
 { pkgs, ... }:
 
 {
-  # Übergangs-Launcher, bis Noctalia (Phase 4) einen eigenen mitbringt
-  home.packages = [ pkgs.fuzzel ];
-
   programs.niri.settings = {
     # --- Eingabe ---
     input.keyboard.xkb.layout = "de";

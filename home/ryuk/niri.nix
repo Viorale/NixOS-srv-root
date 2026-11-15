@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 
 {
   programs.niri.settings = {
@@ -18,7 +18,6 @@
         open-floating = true;
       }
     ];
-
     # Erlaubt Fokus-Wechsel aus Benachrichtigungen heraus (laut Noctalia-Doku)
     debug.honor-xdg-activation-with-invalid-serial = [ ];
 
@@ -81,5 +80,9 @@
         action.spawn = [ "noctalia" "msg" "volume-mute" ];
       };
     };
+    cursor = {
+      theme = config.home.pointerCursor.name;
+      size = config.home.pointerCursor.size;
+    }; 
   };
 }

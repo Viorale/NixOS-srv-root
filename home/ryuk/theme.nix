@@ -13,6 +13,11 @@
     gtk.icon.enable = false;
   };
 
+  catppuccin.cursors = {
+    enable = true;
+    accent = "dark";   # ergibt: catppuccin-mocha-dark-cursors
+  };
+
   gtk = {
     enable = true;
 
@@ -35,6 +40,11 @@
       name = "CaskaydiaCove Nerd Font";
       size = 11;
     };
+  };
+
+  home.pointerCursor = {
+    size = 24;
+    gtk.enable = true;  # Cursor auch in GTK-Apps
   };
 
   # GTK4-/libadwaita-Apps und Portale lesen nur diese Einstellung

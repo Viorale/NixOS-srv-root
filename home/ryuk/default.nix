@@ -10,6 +10,7 @@
     ./yazi.nix
     ./nvim.nix
     ./noctalia.nix
+    ./theme.nix
   ];
 
   #User wird für nix konfiguriert

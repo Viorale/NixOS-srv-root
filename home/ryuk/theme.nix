@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ inputs, pkgs, ... }:
 
 {
   imports = [ inputs.catppuccin.homeModules.catppuccin ];
@@ -12,4 +12,31 @@
     # catppuccin würde sonst Papirus-Icons setzen und Colloid überschreiben
     gtk.icon.enable = false;
   };
+
+  gtk = {
+    enable = true;
+
+    theme = {
+      name = "Colloid-Dark-Catppuccin";
+      package = pkgs.colloid-gtk-theme.override {
+        colorVariants = [ "dark" ];
+        tweaks = [ "catppuccin" ];
+      };
+    };
+
+    iconTheme = {
+      name = "Colloid-Catppuccin-Dark";
+      package = pkgs.colloid-icon-theme.override {
+        schemeVariants = [ "catppuccin" ];
+      };
+    };
+
+    font = {
+      name = "CaskaydiaCove Nerd Font";
+      size = 11;
+    };
+  };
+
+  # GTK4-/libadwaita-Apps und Portale lesen nur diese Einstellung
+  dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
 }

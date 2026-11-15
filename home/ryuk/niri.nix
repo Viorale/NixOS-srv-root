@@ -12,11 +12,23 @@
     prefer-no-csd = true;                  # Apps ohne eigene Titelleisten
     environment.NIXOS_OZONE_WL = "1";      # Electron-Apps nativ unter Wayland
 
+    spawn-at-startup = [ { argv = [ "noctalia" ]; } ];
+
+    # Noctalias Einstellungsfenster schwebend öffnen statt als Spalte
+    window-rules = [
+      {
+        matches = [ { app-id = "^dev\\.noctalia\\.Noctalia$"; } ];
+        open-floating = true;
+      }
+    ];
+
+    # Erlaubt Fokus-Wechsel aus Benachrichtigungen heraus (laut Noctalia-Doku)
+    debug.honor-xdg-activation-with-invalid-serial = [ ];
+
     # --- Tastenkürzel (Mod = Super-/Windows-Taste) ---
     binds = {
       # Programme
       "Mod+Return".action.spawn = [ "kitty" ];
-      "Mod+D".action.spawn = [ "fuzzel" ];
 
       # Fenster
       "Mod+Q".action.close-window = { };
@@ -50,6 +62,27 @@
 
       # Niri beenden (mit Rückfrage)
       "Mod+Shift+E".action.quit = { };
+
+      # Noctalia (IPC = Befehle an die laufende Shell)
+      "Mod+Space".action.spawn = [ "noctalia" "msg" "panel-toggle" "launcher" ];
+      "Mod+D".action.spawn = [ "noctalia" "msg" "panel-toggle" "launcher" ];  # ersetzt fuzzel
+      "Mod+S".action.spawn = [ "noctalia" "msg" "panel-toggle" "control-center" ];
+      "Mod+Comma".action.spawn = [ "noctalia" "msg" "settings-toggle" ];
+      "Mod+Escape".action.spawn = [ "noctalia" "msg" "panel-toggle" "session" ];
+
+      # Lautstärke-Tasten (funktionieren auch im Sperrbildschirm)
+      "XF86AudioRaiseVolume" = {
+        allow-when-locked = true;
+        action.spawn = [ "noctalia" "msg" "volume-up" ];
+      };
+      "XF86AudioLowerVolume" = {
+        allow-when-locked = true;
+        action.spawn = [ "noctalia" "msg" "volume-down" ];
+      };
+      "XF86AudioMute" = {
+        allow-when-locked = true;
+        action.spawn = [ "noctalia" "msg" "volume-mute" ];
+      };
     };
   };
 }

@@ -23,9 +23,15 @@
     url = "github:noctalia-dev/noctalia/v5.5.0";
     inputs.nixpkgs.follows = "nixpkgs";
     };
+  
+  catppuccin = {
+    url = "github:catppuccin/nix/release-26.05";
+    inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   }; 
 
-  outputs = { self, nixpkgs, home-manager, niri, noctalia, ... }@inputs: {
+  outputs = { self, nixpkgs, home-manager, niri, noctalia, catppuccin, ... }@inputs: {
     # "srv-root" ist der Name, den du später mit #srv-root ansprichst
     nixosConfigurations.srv-root = nixpkgs.lib.nixosSystem {
       specialArgs = { inherit inputs; };   # macht inputs in allen Modulen verfügbar

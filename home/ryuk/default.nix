@@ -11,7 +11,8 @@
     ./nvim.nix
     ./noctalia.nix
     ./theme.nix
-  ];
+    ./browser.nix
+    ];
 
   #User wird für nix konfiguriert
   home.username = "ryuk";

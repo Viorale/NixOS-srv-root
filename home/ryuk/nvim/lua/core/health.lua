@@ -1,0 +1,315 @@
+-- `:checkhealth core` — verifies the things this config actually depends on.
+--
+-- Neovim's built-in health checks cover Neovim; these cover the assumptions
+-- made here: the external binaries that features shell out to, a working C
+-- compiler for Treesitter (with the PATH-shadowing trap that costs the most
+-- time to diagnose), and the state of the theme layer.
+
+local M = {}
+
+local start = vim.health.start
+local ok = vim.health.ok
+local warn = vim.health.warn
+local error_ = vim.health.error
+local info = vim.health.info
+
+--- Report on an external program.
+---@param name string
+---@param opts { required?: boolean, reason: string, install?: string }
+local function check_executable(name, opts)
+  local path = require("core.utils").tool_path(name)
+
+  if path then
+    ok(("`%s` found at %s"):format(name, path))
+    return true
+  end
+
+  local message = ("`%s` not found — %s"):format(name, opts.reason)
+  if opts.install then
+    message = message .. "\n  Install: " .. opts.install
+  end
+
+  if opts.required then
+    error_(message)
+  else
+    warn(message)
+  end
+
+  return false
+end
+
+local function check_versions()
+  start("Neovim")
+
+  if vim.fn.has("nvim-0.11") == 1 then
+    ok("Neovim " .. tostring(vim.version()))
+  else
+    error_("Neovim 0.11+ is required (vim.lsp.config, vim.diagnostic.jump, 'winborder')")
+  end
+
+  info("Config root: " .. vim.fn.stdpath("config"))
+  info("Data root:   " .. vim.fn.stdpath("data"))
+end
+
+local NIX_HINT = "add it to programs.neovim.extraPackages in home/ryuk/nvim.nix"
+
+local function check_core_tools()
+  start("Core tools")
+
+  check_executable("git", {
+    required = true,
+    reason = "lazy.nvim bootstraps and updates plugins with it",
+    install = NIX_HINT,
+  })
+
+  check_executable("fzf", {
+    required = true,
+    reason = "fzf-lua (every <leader>f picker, the theme picker) runs on it",
+    install = NIX_HINT,
+  })
+
+  check_executable("rg", {
+    reason = "live grep (<leader>fg) and todo-comments search need ripgrep",
+    install = NIX_HINT,
+  })
+
+  check_executable("fd", {
+    reason = "optional; fzf-lua falls back to `find` without it",
+    install = NIX_HINT,
+  })
+
+  check_executable("yazi", {
+    reason = "<leader>fe / <leader>fE open the yazi file manager",
+    install = NIX_HINT,
+  })
+
+  check_executable("zoxide", {
+    reason = "optional; the workspace picker (<leader>fo) lists zoxide's folders",
+    install = NIX_HINT,
+  })
+
+  check_executable("lazygit", {
+    reason = "<leader>gl opens Lazygit",
+    install = NIX_HINT,
+  })
+end
+
+--- Treesitter compiles its parsers with a C compiler. On NixOS gcc comes from
+--- extraPackages; this compiles a trivial program to prove it really works.
+local function check_treesitter()
+  start("Treesitter toolchain")
+
+  local compiler
+  for _, name in ipairs({ "cc", "gcc", "clang", "zig" }) do
+    if vim.fn.executable(name) == 1 then
+      compiler = name
+      break
+    end
+  end
+
+  if not compiler then
+    error_(
+      "No C compiler found — Treesitter parsers cannot be built.\n"
+        .. "  NixOS: add `gcc` to programs.neovim.extraPackages"
+    )
+    return
+  end
+
+  -- Actually compile something: presence on PATH proves nothing when the
+  -- runtime DLLs beside it are the wrong ones.
+  local out = vim.fs.joinpath(vim.fn.stdpath("cache"), "health-cc-probe")
+  local result = vim
+    .system({ compiler, "-o", out, "-x", "c", "-" }, {
+      stdin = "int main(void){return 0;}",
+      text = true,
+    })
+    :wait()
+
+  if result.code == 0 then
+    ok(("`%s` compiles successfully (%s)"):format(compiler, vim.fn.exepath(compiler)))
+    pcall(vim.fn.delete, out)
+  else
+    error_(
+      ("`%s` is on PATH but failed to compile a trivial program (exit %d).\n"):format(compiler, result.code)
+        .. "  stderr: "
+        .. ((result.stderr or ""):gsub("%s+$", ""))
+    )
+  end
+
+  -- nvim-treesitter (main branch) builds every parser with the tree-sitter CLI.
+  local ts_cli = vim.fn.exepath("tree-sitter")
+  if ts_cli == "" then
+    error_("`tree-sitter` CLI not found — parsers cannot be built.\n  NixOS: add `tree-sitter` to programs.neovim.extraPackages")
+  else
+    local out = vim.system({ ts_cli, "--version" }, { text = true }):wait()
+    local version = (out.stdout or ""):match("(%d+%.%d+%.%d+)")
+    if version and vim.version.ge(version, "0.26.1") then
+      ok(("`tree-sitter` %s (%s)"):format(version, ts_cli))
+    else
+      error_(("`tree-sitter` %s is too old; nvim-treesitter needs 0.26.1 or newer"):format(version or "?"))
+    end
+  end
+
+  -- Count on disk rather than via the runtimepath: nvim-treesitter is lazy, so
+  -- its parser directory is not on 'rtp' until a buffer has opened.
+  local seen = {}
+  local roots = vim.api.nvim_get_runtime_file("parser", true)
+  table.insert(roots, vim.fs.joinpath(vim.fn.stdpath("data"), "lazy", "nvim-treesitter", "parser"))
+
+  for _, root in ipairs(roots) do
+    for _, file in ipairs(vim.fn.glob(root .. "/*", false, true)) do
+      seen[vim.fn.fnamemodify(file, ":t:r")] = true
+    end
+  end
+
+  info(("%d Treesitter parsers installed"):format(vim.tbl_count(seen)))
+
+  -- Stale clone directories left behind by an interrupted `:TSInstall` block
+  -- every later install with "destination path already exists".
+  local data = vim.fn.stdpath("data")
+  local stale = vim.fn.glob(data .. "/tree-sitter-*", false, true)
+  if #stale > 0 then
+    warn(
+      ("%d leftover tree-sitter clone director%s in %s.\n"):format(#stale, #stale == 1 and "y" or "ies", data)
+        .. "  These block new parser installs with 'destination path already exists'.\n"
+        .. "  Remove them and retry `:TSUpdate`."
+    )
+  else
+    ok("No stale tree-sitter clone directories")
+  end
+end
+
+--- Which formatters and linters are actually available.
+---
+--- Both layers treat a missing tool as a non-event — conform skips a formatter
+--- it cannot run, and nvim-lint filters unavailable linters out before it fires
+--- (see plugins/lint.lua) — which is the right behaviour and also means nothing
+--- ever tells you *why* a filetype isn't being formatted. This does.
+local function check_tooling()
+  start("Formatters and linters")
+
+  --- Distinct tool names across a `{ [filetype] = { "a", "b" } }` table.
+  ---@param by_ft table<string, string[]>
+  ---@return string[]
+  local function tool_names(by_ft)
+    local seen, names = {}, {}
+
+    for _, tools in pairs(by_ft) do
+      for key, tool in pairs(tools) do
+        -- Skip option keys such as `stop_after_first = true`.
+        if type(key) == "number" and type(tool) == "string" and not seen[tool] then
+          seen[tool] = true
+          names[#names + 1] = tool
+        end
+      end
+    end
+
+    table.sort(names)
+    return names
+  end
+
+  --- Split `names` into what is runnable and what is not.
+  ---@param names string[]
+  ---@param resolve fun(name: string): string|nil the command to look for
+  ---@return string[] available, string[] missing
+  local function partition(names, resolve)
+    local available, missing = {}, {}
+
+    for _, name in ipairs(names) do
+      local cmd = resolve(name)
+      if cmd and vim.fn.executable(cmd) == 1 then
+        available[#available + 1] = name
+      elseif cmd then
+        missing[#missing + 1] = name
+      end
+    end
+
+    return available, missing
+  end
+
+  local function report(label, available, missing)
+    if #available > 0 then
+      ok(("%s available: %s"):format(label, table.concat(available, ", ")))
+    end
+
+    if #missing > 0 then
+      info(("%s not installed (skipped silently): %s"):format(label, table.concat(missing, ", ")))
+    end
+
+    if #available == 0 and #missing == 0 then
+      info(label .. ": nothing configured")
+    end
+  end
+
+  -- conform.nvim
+  local ok_conform, conform = pcall(require, "conform")
+  if ok_conform then
+    local names = vim.tbl_filter(
+      -- The built-ins operate on the buffer directly; there is no binary.
+      function(name) return name ~= "trim_whitespace" and name ~= "trim_newlines" end,
+      tool_names(conform.formatters_by_ft or {})
+    )
+
+    local available, missing = partition(names, function(name)
+      local info_ = conform.get_formatter_info and conform.get_formatter_info(name)
+      return info_ and info_.command or name
+    end)
+
+    report("Formatters", available, missing)
+    info("Format on save is " .. (vim.g.format_on_save and "on" or "off") .. " (<leader>cF toggles)")
+  else
+    info("conform.nvim is not loaded yet — open a file and re-run this check")
+  end
+
+  -- nvim-lint
+  local ok_lint, lint = pcall(require, "lint")
+  if ok_lint then
+    local available, missing = partition(tool_names(lint.linters_by_ft or {}), function(name)
+      local linter = lint.linters[name]
+      -- A `cmd` that is a function resolves a project-local binary at call
+      -- time; there is nothing to test for here.
+      return type(linter) == "table" and type(linter.cmd) == "string" and linter.cmd or nil
+    end)
+
+    report("Linters", available, missing)
+  else
+    info("nvim-lint is not loaded yet — open a file and re-run this check")
+  end
+end
+
+local function check_ui()
+  start("UI")
+
+  if vim.o.termguicolors then
+    ok("'termguicolors' is on")
+  else
+    error_("'termguicolors' is off — themes will look wrong")
+  end
+
+  local theme = vim.g.current_theme
+  if theme then
+    ok("Active theme: " .. theme)
+  else
+    warn("No theme applied yet (theme_switcher.setup runs on the VeryLazy event)")
+  end
+
+  local cache = vim.g.base46_cache
+  if cache and vim.fn.isdirectory(cache) == 1 then
+    ok("base46 highlight cache: " .. cache)
+  else
+    warn("base46 cache directory is missing; run `:Theme` to rebuild it")
+  end
+
+  info("Glass background: " .. (vim.g.ui_transparent and "on" or "off"))
+  info("A Nerd Font is required for icons: https://www.nerdfonts.com")
+end
+
+function M.check()
+  check_versions()
+  check_core_tools()
+  check_tooling()
+  check_treesitter()
+  check_ui()
+end
+
+return M

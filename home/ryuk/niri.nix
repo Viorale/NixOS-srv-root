@@ -17,10 +17,15 @@
         matches = [ { app-id = "^dev\\.noctalia\\.Noctalia$"; } ];
         open-floating = true;
       }
+      {
+        matches = [ { app-id = "^kitty$"; } ];
+        draw-border-with-background = false;
+        background-effect.blur = true;
+      }
     ];
     # Erlaubt Fokus-Wechsel aus Benachrichtigungen heraus (laut Noctalia-Doku)
     debug.honor-xdg-activation-with-invalid-serial = [ ];
-
+    
     # --- Tastenkürzel (Mod = Super-/Windows-Taste) ---
     binds = {
       # Programme

@@ -1,0 +1,11 @@
+{ inputs, ... }:
+
+{
+  # "beta" = normale Releases, "twilight" = Nightly-Builds
+  imports = [ inputs.zen-browser.homeModules.beta ];
+
+  programs.zen-browser = {
+    enable = true;
+    setAsDefaultBrowser = true;   # Links öffnen sich in Zen
+  };
+}

@@ -46,16 +46,30 @@
       catppuccin,
       ...
     }@inputs:
+    let
+      mkHost =
+        name:
+        nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit inputs; };
+          modules = [ ./hosts/${name} ];
+        };
+    in
     {
-      # "srv-root" ist der Name, den du später mit #srv-root ansprichst
-      nixosConfigurations.client-vmware-ryuk = nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs; }; # macht inputs in allen Modulen verfügbar
-        modules = [
-          ./hosts/client-vmware-ryuk
-          home-manager.nixosModules.home-manager
-          niri.nixosModules.niri
-          noctalia.nixosModules.default
-        ];
+      nixosConfigurations = {
+        client-vmware-ryuk = mkHost "client-vmware-ryuk";
       };
     };
+
+  #  {
+  # "srv-root" ist der Name, den du später mit #srv-root ansprichst
+  #      nixosConfigurations.client-vmware-ryuk = nixpkgs.lib.nixosSystem {
+  #        specialArgs = { inherit inputs; }; # macht inputs in allen Modulen verfügbar
+  #     modules = [
+  #       ./hosts/client-vmware-ryuk
+  #       home-manager.nixosModules.home-manager
+  #       niri.nixosModules.niri
+  #       noctalia.nixosModules.default
+  #     ];
+  #   };
+  # };
 }

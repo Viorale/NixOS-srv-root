@@ -4,7 +4,6 @@
   inputs = {
     # Paketquelle: stabiler Release-Zweig 26.05
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
-
     #Home Manger wird installiert
     #Home Manager = schreibt Configs. Die Programme dazu kommen aus deiner nixpkgs.
     home-manager = {
@@ -57,8 +56,8 @@
     {
       nixosConfigurations = {
         client-vmware-ryuk = mkHost "client-vmware-ryuk";
-	client-nvidia-ryuk = mkHost "client-nvidia-ryuk";
+        client-nvidia-ryuk = mkHost "client-nvidia-ryuk";
       };
     };
 
- }
+}

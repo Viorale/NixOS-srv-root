@@ -14,23 +14,32 @@
     # --- Monitor ---
     outputs."HDMI-A-1" = {
       mode = {
-	width = 2560;
-	height = 1440;
-	refresh = null;
+        width = 2560;
+        height = 1440;
+        refresh = 143.999;
       };
       scale = 1.0;
-     };
+      position = {
+        x = 0;
+        y = 0;
+      };
+      focus-at-startup = true;
+    };
 
     outputs."HDMI-A-2" = {
       mode = {
         width = 2560;
         height = 1440;
-        refresh = null;
+        refresh = 143.999;
       };
       scale = 1.0;
-     };
+      position = {
+        x = 0;
+        y = 0;
+      };
+      focus-at-startup = true;
+    };
 
- 
     # Noctalias Einstellungsfenster schwebend öffnen statt als Spalte
     window-rules = [
       {
@@ -56,14 +65,18 @@
       "Mod+Return".action.spawn = [ "kitty" ];
 
       # Fenster
-      "Mod+Q".action.close-window = { };
+      "Mod+W".action.close-window = { };
       "Mod+F".action.maximize-column = { };
       "Mod+Shift+F".action.fullscreen-window = { };
       "Mod+R".action.switch-preset-column-width = { };
+      "Mod+Ctrl+Left".action.move-column-left-or-to-monitor-left = { };
+      "Mod+Ctrl+Right".action.move-column-right-or-to-monitor-right = { };
 
       # Fokus wechseln
       "Mod+Left".action.focus-column-left = { };
       "Mod+Right".action.focus-column-right = { };
+      "Mod+Alt+Left".action.focus-monitor-left = { };
+      "Mod+Alt+Right".action.focus-monitor-right = { };
       "Mod+Up".action.focus-window-up = { };
       "Mod+Down".action.focus-window-down = { };
 

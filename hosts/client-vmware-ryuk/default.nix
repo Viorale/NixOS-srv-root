@@ -5,6 +5,7 @@
     ./hardware-configuration.nix
     ../common.nix
     ../../modules/vmware.nix
+    ../../modules/sunshine.nix
   ];
 
   networking.hostName = "client-vmware-ryuk"; # wird in Phase 1b zu "srv-root"

@@ -11,7 +11,6 @@
     ./noctalia.nix
     ./theme.nix
     ./browser.nix
-    ./gaming.nix
   ];
 
   #User wird für nix konfiguriert

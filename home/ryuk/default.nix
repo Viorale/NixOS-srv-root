@@ -1,6 +1,5 @@
 { ... }:
 
-
 # Durch reichen der packete
 {
   imports = [
@@ -12,7 +11,8 @@
     ./noctalia.nix
     ./theme.nix
     ./browser.nix
-    ];
+    ./gaming.nix
+  ];
 
   #User wird für nix konfiguriert
   home.username = "ryuk";

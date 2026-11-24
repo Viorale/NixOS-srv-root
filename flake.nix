@@ -57,19 +57,8 @@
     {
       nixosConfigurations = {
         client-vmware-ryuk = mkHost "client-vmware-ryuk";
+	client-nvidia-ryuk = mkHost "client-nvidia-ryuk";
       };
     };
 
-  #  {
-  # "srv-root" ist der Name, den du später mit #srv-root ansprichst
-  #      nixosConfigurations.client-vmware-ryuk = nixpkgs.lib.nixosSystem {
-  #        specialArgs = { inherit inputs; }; # macht inputs in allen Modulen verfügbar
-  #     modules = [
-  #       ./hosts/client-vmware-ryuk
-  #       home-manager.nixosModules.home-manager
-  #       niri.nixosModules.niri
-  #       noctalia.nixosModules.default
-  #     ];
-  #   };
-  # };
-}
+ }

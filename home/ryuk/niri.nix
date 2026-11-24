@@ -11,6 +11,26 @@
 
     spawn-at-startup = [ { argv = [ "noctalia" ]; } ];
 
+    # --- Monitor ---
+    outputs."HDMI-A-1" = {
+      mode = {
+	width = 2560;
+	height = 1440;
+	refresh = null;
+      };
+      scale = 1.0;
+     };
+
+    outputs."HDMI-A-2" = {
+      mode = {
+        width = 2560;
+        height = 1440;
+        refresh = null;
+      };
+      scale = 1.0;
+     };
+
+ 
     # Noctalias Einstellungsfenster schwebend öffnen statt als Spalte
     window-rules = [
       {

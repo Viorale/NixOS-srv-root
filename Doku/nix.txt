@@ -1,0 +1,24 @@
+##Installation von Software
+
+#User Seitige Installation
+home/ryuk/
+
+{ pkgs, ... }:
+
+{
+  home.packages = with pkgs; [
+    spotify
+  ];
+}
+
+#Systemweite Installation
+modules/default-software.nix:
+
+nix
+{ pkgs, ... }:
+
+{
+  environment.systemPackages = with pkgs; [
+    spotify
+  ];
+}

@@ -4,6 +4,10 @@
   programs.niri.settings = {
     # --- Eingabe ---
     input.keyboard.xkb.layout = "de";
+    input.mouse = {
+      accel-profile = "flat"; # "flat" oder "adaptive"
+      accel-speed = -0.4;
+    };
 
     # --- Verhalten ---
     prefer-no-csd = true; # Apps ohne eigene Titelleisten

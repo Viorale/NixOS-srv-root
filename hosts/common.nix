@@ -15,6 +15,8 @@
 
   ];
 
+  nixpkgs.config.allowUnfree = true;
+
   home-manager = {
     useGlobalPkgs = true; # gleiche pkgs wie das System (inkl. allowUnfree)
     useUserPackages = true; # Pakete landen in /etc/profiles/per-user/ryuk

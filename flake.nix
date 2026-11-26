@@ -33,6 +33,16 @@
       inputs.home-manager.follows = "home-manager";
     };
 
+    obsidian-obsidianite = {
+      url = "github:bennyxguo/Obsidian-Obsidianite";
+      flake = false;
+    };
+
+    zen-nebula = {
+      url = "github:JustAdumbPrsn/Zen-Nebula";
+      flake = false;
+    };
+
     spicetify-nix.url = "github:Gerg-L/spicetify-nix";
 
   };

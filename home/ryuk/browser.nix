@@ -6,6 +6,6 @@
 
   programs.zen-browser = {
     enable = true;
-    setAsDefaultBrowser = true;   # Links öffnen sich in Zen
+    setAsDefaultBrowser = true; # Links öffnen sich in Zen
   };
 }

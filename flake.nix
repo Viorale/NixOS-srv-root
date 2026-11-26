@@ -33,10 +33,7 @@
       inputs.home-manager.follows = "home-manager";
     };
 
-    spotfiy = {
-      url = "github:Gerg-L/spicetify-nix";
-      inputs.home-manager.follows = "home-manager";
-    };
+    spicetify-nix.url = "github:Gerg-L/spicetify-nix";
 
   };
 

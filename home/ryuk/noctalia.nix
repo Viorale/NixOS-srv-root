@@ -16,12 +16,12 @@
         source = "builtin";
         builtin = "Catppuccin";
       };
-        shell.font_family = "CaskaydiaCove Nerd Font";
-        shell.polkit_agent = true;   # wird in 4.3 auf true gesetzt
-    
-    pointer = {
-      accel_profile = "flat"; # "flat" oder "adaptive"
-      accel_speed = 0.0;      #
+      shell.font_family = "CaskaydiaCove Nerd Font";
+      shell.polkit_agent = true; # wird in 4.3 auf true gesetzt
+
+      pointer = {
+        accel_profile = "flat"; # "flat" oder "adaptive"
+        accel_speed = 13.0;
       };
 
     };

@@ -11,6 +11,7 @@
     ./noctalia.nix
     ./theme.nix
     ./browser.nix
+    ./default-software.nix
   ];
 
   #User wird für nix konfiguriert

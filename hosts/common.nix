@@ -12,7 +12,6 @@
     ../modules/desktop.nix
     ../modules/fonts.nix
     ../modules/greeter.nix
-    ../modules/musik.nix
 
   ];
 

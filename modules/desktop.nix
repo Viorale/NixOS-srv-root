@@ -3,9 +3,9 @@
 {
   #Niri wird installiert
   programs.niri.enable = true;
-  
+
   # X11-Apps: Niri startet xwayland-satellite selbst, sobald es im PATH liegt
-  environment.systemPackages = [pkgs.xwayland-satellite ];
+  environment.systemPackages = [ pkgs.xwayland-satellite ];
 
   # Übergang für Datei-Dialog
   xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
@@ -13,6 +13,8 @@
 
   services.gnome.gnome-keyring.enable = true;
   systemd.user.services.niri-flake-polkit.enable = false;
+
+  home-manager.sharedModules = [ ../home/noctalia.nix ];
 
   #Energie-Widgets.
   programs.noctalia = {

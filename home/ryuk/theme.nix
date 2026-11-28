@@ -4,8 +4,9 @@
   imports = [ inputs.catppuccin.homeModules.catppuccin ];
 
   catppuccin = {
-    enable = true;      # themet jedes unterstützte Programm, das in HM aktiv ist:
-                        # kitty, neovim, yazi, bat, fzf
+    enable = true;
+    # themet jedes unterstützte Programm, das in HM aktiv ist:
+    # kitty, neovim, yazi, bat, fzf
     flavor = "mocha";
     accent = "mauve";
 
@@ -15,20 +16,19 @@
 
   catppuccin.cursors = {
     enable = true;
-    accent = "dark";   # ergibt: catppuccin-mocha-dark-cursors
+    accent = "dark"; # ergibt: catppuccin-mocha-dark-cursors
   };
 
+  catppuccin.kitty.enable = false; # kitty-Farben kommen jetzt von Noctalia
   gtk = {
-    enable = true;
+    #  enable = true;
 
-    theme = {
-      name = "Colloid-Dark-Catppuccin";
-      package = pkgs.colloid-gtk-theme.override {
-        colorVariants = [ "dark" ];
-        tweaks = [ "catppuccin" ];
-      };
-    };
-
+    # theme = {
+    #    name = "Colloid-Dark-Catppuccin";
+    #    package = pkgs.colloid-gtk-theme.override {
+    #      colorVariants = [ "dark" ];
+    #      tweaks = [ "catppuccin" ];
+    #    };
     iconTheme = {
       name = "Colloid-Catppuccin-Dark";
       package = pkgs.colloid-icon-theme.override {
@@ -44,7 +44,7 @@
 
   home.pointerCursor = {
     size = 24;
-    gtk.enable = true;  # Cursor auch in GTK-Apps
+    gtk.enable = true; # Cursor auch in GTK-Apps
   };
 
   # GTK4-/libadwaita-Apps und Portale lesen nur diese Einstellung

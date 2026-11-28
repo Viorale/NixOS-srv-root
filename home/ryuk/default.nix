@@ -8,7 +8,7 @@
     ./cli.nix
     ./yazi.nix
     ./nvim.nix
-    ./noctalia.nix
+    ../noctalia.nix
     ./theme.nix
     ./browser.nix
     ./default-software.nix

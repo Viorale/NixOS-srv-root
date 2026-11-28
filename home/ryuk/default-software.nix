@@ -1,4 +1,9 @@
-{ pkgs, inputs, ... }:
+{
+  config,
+  pkgs,
+  inputs,
+  ...
+}:
 
 {
 
@@ -6,6 +11,8 @@
 
   home.packages = with pkgs; [
     obsidian
+    element-desktop
+    vesktop
   ];
 
   programs.spicetify =
@@ -14,8 +21,8 @@
     in
     {
       enable = true;
-      theme = spicePkgs.themes.catppuccin;
-      colorScheme = "mocha";
+      theme = spicePkgs.themes.hazy;
+      #colorScheme = "mocha";
     };
 
   programs.obsidian = {
@@ -25,6 +32,6 @@
       nixos.target = "Dokumente/Obsidian/NixOS/NixOS";
       cybersec.target = "Dokumente/Obsidian/CyberSec";
     };
-    defaultSettings.themes = [ inputs.obsidian-obsidianite ];
+    defaultSettings.themes = [ inputs.obsidian-isinglass ];
   };
 }

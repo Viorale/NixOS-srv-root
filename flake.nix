@@ -33,8 +33,8 @@
       inputs.home-manager.follows = "home-manager";
     };
 
-    obsidian-obsidianite = {
-      url = "github:bennyxguo/Obsidian-Obsidianite";
+    obsidian-isinglass = {
+      url = "github:ameyxd/obsidian-isinglass";
       flake = false;
     };
 

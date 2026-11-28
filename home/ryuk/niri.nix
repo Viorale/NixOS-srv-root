@@ -59,6 +59,10 @@
         geometry-corner-radius = 12.0;
         clip-to-geometry = true;
       }
+      {
+        matches = [ { app-id = "^zen"; } ];
+        draw-border-with-background = false;
+      }
     ];
     # Erlaubt Fokus-Wechsel aus Benachrichtigungen heraus (laut Noctalia-Doku)
     debug.honor-xdg-activation-with-invalid-serial = [ ];

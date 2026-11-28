@@ -6,6 +6,7 @@
     ../common.nix
     ../../modules/nvidia.nix
     ../../modules/gaming.nix
+    ../../modules/wireguard.nix
   ];
 
   networking.hostName = "client-nvidia-ryuk"; # wird in Phase 1b zu "srv-root"

@@ -63,12 +63,24 @@
         matches = [ { app-id = "^zen"; } ];
         draw-border-with-background = false;
       }
+      {
+        matches = [ { app-id = "^gamescope$"; } ];
+        open-fullscreen = true;
+        open-on-output = "HDMI-A-1";
+      }
     ];
     # Erlaubt Fokus-Wechsel aus Benachrichtigungen heraus (laut Noctalia-Doku)
     debug.honor-xdg-activation-with-invalid-serial = [ ];
 
     # --- Tastenkürzel (Mod = Super-/Windows-Taste) ---
     binds = {
+      #Befehle Shortcuts
+      "Mod+Shift+S".action.spawn = [
+        "noctalia"
+        "msg"
+        "screenshot-region"
+      ];
+
       # Programme
       "Mod+Return".action.spawn = [ "kitty" ];
 
